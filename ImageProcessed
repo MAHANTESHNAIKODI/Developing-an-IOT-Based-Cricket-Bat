@@ -1,0 +1,44 @@
+PShape pieta;
+import processing.serial.*;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+Serial myPort;
+String data="";
+void setup() {
+size (800, 600, P3D); //Setting the screen size
+pieta = loadShape("Nwmodel.obj"); //loading the 3D Model kept in the sketchbook/data folder
+myPort = new Serial(this, "COM7", 115200); // starts the serial communication
+myPort.bufferUntil('\n');
+}
+//Draws the object in 3D space
+void draw() {
+//Size scaling of the model
+scale(2);
+//Setting the screen background
+background(33);
+//Setting a point to view the movements of the model in 3D space
+camera(-70.0, -70.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 5.0);
+translate(150, 150, 10);
+// Rotate the object
+rotateY(-radians(-180+roll));
+rotateX(-radians(pitch));
+// Call the 3D Model
+shape(pieta);
+}
+// Read data from the Serial Port
+void serialEvent (Serial myPort) {
+// Reads the data from the port COM 7 up to ' ' and puts it into the string variable "data".
+
+data = myPort.readStringUntil('\n');
+if (data != null) {
+data = trim(data);
+// split the string at "/"
+String items[] = split(data, '\t');
+if (items.length > 1) {
+// Roll,Pitch in degrees
+roll = float(items[0]);
+pitch = float(items[1]);
+println("Bat lift angle:\t"+ roll + "\t" + "Bat face angle:\t" + pitch);
+}
+}
+}
