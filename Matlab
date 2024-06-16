@@ -1,0 +1,13 @@
+data = myPort.readStringUntil('\n');
+if (data != null) {
+data = trim(data);
+// split the string at "/"
+String items[] = split(data, '\t');
+if (items.length > 1) {
+// Roll,Pitch in degrees
+roll = float(items[0]);
+pitch = float(items[1]);
+println("Bat lift angle:\t"+ roll + "\t" + "Bat face angle:\t" + pitch);
+}
+}
+}
